@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/styles.css">
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <title>Calculadora</title>
+</head>
+
+<body>
+    <h1 class="title">Calculadora</h1>
+
+    <div class="container">
+      
+        <div class="calculator">
+            <div class="display" id="display">0</div>
+            <div class="button-container">
+                <button class="button" onclick="appendToDisplay('(')">(</button>
+                <button class="button" onclick="appendToDisplay(')')">)</button>
+                <button class="button clear" onclick="clearDisplay()">C</button>
+                <button class="button operator" onclick="appendToDisplay('/')">/</button>
+                <button class="button" onclick="appendToDisplay('7')">7</button>
+                <button class="button" onclick="appendToDisplay('8')">8</button>
+                <button class="button" onclick="appendToDisplay('9')">9</button>
+                <button class="button operator" onclick="appendToDisplay('*')">X</button>
+                <button class="button" onclick="appendToDisplay('4')">4</button>
+                <button class="button" onclick="appendToDisplay('5')">5</button>
+                <button class="button" onclick="appendToDisplay('6')">6</button>
+                <button class="button operator" onclick="appendToDisplay('-')">-</button>
+                <button class="button" onclick="appendToDisplay('1')">1</button>
+                <button class="button" onclick="appendToDisplay('2')">2</button>
+                <button class="button" onclick="appendToDisplay('3')">3</button>
+                <button class="button operator" onclick="appendToDisplay('+')">+</button>
+                <button class="button" onclick="appendToDisplay('0')">0</button>
+                <button class="button" onclick="appendToDisplay('.')">.</button>
+                <button class="button equal" onclick="calculateResult()">=</button>
+            </div>
+        </div>
+
+        <div id="syntax-tree-container"></div>
+
+
+    <script src="../static/script.js"></script>
+</body>
+
+</html>
