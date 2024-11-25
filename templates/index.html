@@ -12,7 +12,7 @@
     <h1 class="title">Calculadora</h1>
 
     <div class="container">
-      
+        <!-- Calculadora -->
         <div class="calculator">
             <div class="display" id="display">0</div>
             <div class="button-container">
@@ -34,14 +34,24 @@
                 <button class="button operator" onclick="appendToDisplay('+')">+</button>
                 <button class="button" onclick="appendToDisplay('0')">0</button>
                 <button class="button" onclick="appendToDisplay('.')">.</button>
+                <button class="button delete" onclick="deleteLast()">DEL</button>
+                <button class="button memory" onclick="saveToMemory()">MS</button>
+                <button class="button memory" onclick="useMemory()">MR</button>
                 <button class="button equal" onclick="calculateResult()">=</button>
             </div>
         </div>
 
-        <div id="syntax-tree-container"></div>
-
+        <!-- Resultados: Árbol y Tokens -->
+        <div class="results">
+            <div class="view-options">
+                <button class="view-tree-button" onclick="showSyntaxTree()">Ver Árbol</button>
+                <button class="view-tree-button" onclick="showTokens()">Ver Tokens</button>
+            </div>
+            <div id="syntax-tree-container" class="result-view"></div>
+            <div id="tokens-container" class="result-view scrollable" style="display: none;"></div>
+        </div>
+    </div>
 
     <script src="../static/script.js"></script>
 </body>
-
 </html>

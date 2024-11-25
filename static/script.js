@@ -1,31 +1,78 @@
-
+let memoryValue = null; 
 const display = document.getElementById('display');
+const syntaxTreeContainer = document.getElementById('syntax-tree-container');
+const tokensContainer = document.getElementById('tokens-container');
 
+// Inicializar los contenedores vacíos
+function initializeContainers() {
+    syntaxTreeContainer.innerHTML = `<p>Árbol de sintaxis</p>`;
+    tokensContainer.innerHTML = `<p>Lista de tokens</p>`;
+}
 
+initializeContainers();
+
+// Alternar la vista entre Árbol de Sintaxis y Tokens
+function showSyntaxTree() {
+    syntaxTreeContainer.style.display = 'block';
+    tokensContainer.style.display = 'none';
+}
+
+function showTokens() {
+    syntaxTreeContainer.style.display = 'none';
+    tokensContainer.style.display = 'block';
+}
+
+// Agregar un número o símbolo al display
 function appendToDisplay(value) {
     if (display.innerText === '0' || display.innerText === 'Error') {
-        display.innerText = value;
+        display.innerText = value; 
     } else {
-        display.innerText += value;
+        display.innerText += value; 
     }
 }
 
-
+// Borrar todo el display
 function clearDisplay() {
-    const display = document.querySelector('.display');
     display.innerText = '0';
-    
- 
-    const syntaxTreeContainer = document.querySelector('#syntax-tree-container');
-    syntaxTreeContainer.innerHTML = ''; 
+    syntaxTreeContainer.innerHTML = `<p>Árbol de sintaxis</p>`;
+    tokensContainer.innerHTML = `<p>Lista de tokens</p>`;
 }
 
+// Borrar el último carácter ingresado
+function deleteLast() {
+    if (display.innerText.length > 1) {
+        display.innerText = display.innerText.slice(0, -1)
+    } else {
+        display.innerText = '0'; 
+    }
+}
 
+// Guardar el valor actual del display en memoria y limpiar la pantalla
+function saveToMemory() {
+    const currentValue = display.innerText;
+    if (!isNaN(currentValue)) {
+        memoryValue = currentValue; 
+        clearDisplay(); 
+        alert(`Guardado en memoria: ${memoryValue}`); 
+    } else {
+        alert("No se puede guardar un valor inválido.");
+    }
+}
+
+// Usar el valor guardado en memoria en la operación actual
+function useMemory() {
+    if (memoryValue !== null) {
+        appendToDisplay(memoryValue); 
+    } else {
+        alert("No hay valor guardado en memoria.");
+    }
+}
+
+// Calcular el resultado y mostrar el árbol de sintaxis o los tokens
 async function calculateResult() {
     const expression = display.innerText;
 
     try {
-      
         const response = await fetch('http://localhost:5000/evaluate', {
             method: 'POST',
             headers: {
@@ -38,41 +85,39 @@ async function calculateResult() {
             throw new Error('Error en la solicitud al backend');
         }
 
-       
         const data = await response.json();
 
-       
         if (data.result !== undefined) {
             display.innerText = data.result;
         } else {
             display.innerText = 'Error';
         }
 
-      
-        console.log('Árbol de sintaxis:', JSON.stringify(data.syntax_tree, null, 2));
-
-       return renderSyntaxTree(data.syntax_tree)
-
+        renderSyntaxTree(data.syntax_tree);
+        renderTokens(data.tokens, data.total_numbers, data.total_operators);
     } catch (error) {
         display.innerText = 'Error';
     }
 }
 
-
+// Renderizar el árbol de sintaxis en el contenedor
 function renderSyntaxTree(treeData) {
-    const width = 500;
-    const height = 300;
+    const width = 600;
+    const height = 400;
     const margin = { top: 50, right: 50, bottom: 50, left: 50 };
 
     const svg = d3.select("#syntax-tree-container")
+        .html("") 
         .append("svg")
         .attr("width", width)
         .attr("height", height)
-      .append("g")
+        .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
     const root = d3.hierarchy(treeData);
     const treeLayout = d3.tree().size([width - margin.left - margin.right, height - margin.top - margin.bottom]);
+
+    
 
     treeLayout(root);
 
@@ -104,4 +149,29 @@ function renderSyntaxTree(treeData) {
         .attr("dy", 5)
         .style("text-anchor", "middle")
         .text(d => d.data.name);
+}
+
+// Renderizar los tokens en el contenedor como tabla
+function renderTokens(tokens, totalNumbers, totalOperators) {
+    tokensContainer.innerHTML = `
+        <h3>Tokens</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Tipo</th>
+                    <th>Valor</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${tokens.map(token => `
+                    <tr>
+                        <td>${token.type}</td>
+                        <td>${token.value}</td>
+                    </tr>
+                `).join('')}
+            </tbody>
+        </table>
+        <p>Total de números: ${totalNumbers}</p>
+        <p>Total de operadores: ${totalOperators}</p>
+    `;
 }
