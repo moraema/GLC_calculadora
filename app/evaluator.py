@@ -20,6 +20,7 @@ t_DIVIDE = r'/'
 t_LPAREN = r'\('
 t_RPAREN = r'\)'
 
+
 # Manejar números decimales
 def t_DECIMAL(t):
     r'\d+\.\d+'  
@@ -28,7 +29,7 @@ def t_DECIMAL(t):
 
 # Manejar números enteros
 def t_INTEGER(t):
-    r'\d+'  
+    r'-?\d+'  
     t.value = int(t.value)  
     return t
 
@@ -53,9 +54,6 @@ def p_expression_plus(p):
     "expression : expression PLUS term"
     p[0] = {"name": "+", "children": [p[1], p[3]]}
 
-def p_expression_minus(p):
-    "expression : expression MINUS term"
-    p[0] = {"name": "-", "children": [p[1], p[3]]}
 
 def p_expression_term(p):
     "expression : term"
