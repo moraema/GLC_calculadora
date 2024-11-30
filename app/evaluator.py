@@ -21,11 +21,7 @@ t_LPAREN = r'\('
 t_RPAREN = r'\)'
 
 
-# Manejar números decimales
-def t_DECIMAL(t):
-    r'\d+\.\d+'  
-    t.value = float(t.value)  
-    return t
+
 
 # Manejar números enteros
 def t_INTEGER(t):
@@ -70,11 +66,6 @@ def p_term_divide(p):
 def p_term_factor(p):
     "term : factor"
     p[0] = p[1]
-
-# Diferenciar entre enteros y decimales
-def p_factor_decimal(p):
-    "factor : DECIMAL"
-    p[0] = {"name": str(p[1]), "children": []}
 
 def p_factor_integer(p):
     "factor : INTEGER"
