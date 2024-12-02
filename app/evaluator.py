@@ -22,10 +22,14 @@ t_RPAREN = r'\)'
 
 
 
+def t_DECIMAL(t): 
+    r'\d+\.\d+'
+    t.value = float(t.value)
+    return t
 
 # Manejar números enteros
 def t_INTEGER(t):
-    r'-?\d+'  
+    r'\d+'  
     t.value = int(t.value)  
     return t
 
@@ -51,6 +55,11 @@ def p_expression_plus(p):
     p[0] = {"name": "+", "children": [p[1], p[3]]}
 
 
+def p_expression_minus(p):
+    "expression : expression MINUS term"
+    p[0] = {"name": "-", "children": [p[1], p[3]]}
+
+
 def p_expression_term(p):
     "expression : term"
     p[0] = p[1]
@@ -66,6 +75,11 @@ def p_term_divide(p):
 def p_term_factor(p):
     "term : factor"
     p[0] = p[1]
+
+def p_factor_decimal(p):
+    "term : DECIMAL"
+    p[0] = {"name": str(p[1]), "children": []}
+
 
 def p_factor_integer(p):
     "factor : INTEGER"
@@ -131,4 +145,3 @@ def eval_tree(tree):
 # Convertir el árbol a JSON
 def tree_to_json(tree):
     return tree  
-
